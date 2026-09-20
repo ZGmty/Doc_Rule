@@ -1,77 +1,110 @@
-version: 1
+version: 2
 language: zh-CN
-repository_purpose: "技术文档、标书、合同正式交付反例规则库"
+repository_purpose: "技术文档、标书、合同正式交付反例规则库兼写作规范库"
 
 defaults:
   audience: "甲方、招标人、评审专家、合同相对方或最终使用部门"
   assumption: "除非明确为内部稿，否则按正式对外交付文件处理"
   workflow:
-    - "编写前加载适用规则"
-    - "编写过程中规避反例模式"
-    - "初稿完成后执行独立审查"
-    - "输出问题定位、规则编号、原因和建议改写"
+    - "自动识别任务模式：写作 / 审查 / 反馈沉淀 / 规则维护"
+    - "先读取规则索引，再按文档类型和严重度筛选"
+    - "写作前把适用规则转换为前置约束"
+    - "完稿后按相同规则执行独立验证"
+    - "反馈沉淀时先语义去重，再决定不录入、扩展已有规则或新建规则"
 
 rules:
   - id: DR-FRM-001
     title: "禁止内部提示型版式残留"
+    status: active
     category: "formal-delivery"
     severity: high
     applies_to: ["技术方案", "标书", "合同技术附件", "实施方案", "验收文件"]
     file: "rules/formal-delivery/DR-FRM-001-禁止内部提示型版式残留.md"
+    dedup_signature: "正式对外文件暴露内部编辑、提醒、审阅或草稿状态的视觉样式"
+    authoring_guard: "生成正式文档时不得主动加入高亮底色、Callout、内部提示框、修订痕迹或仅供编制人员阅读的强调样式"
+    review_check: "检查段落底纹、文本高亮、提示框、批注、修订标记和异常强调边框"
     detection_hints: ["高亮底色", "Callout", "提示框", "强调色块", "编辑备注样式", "修订痕迹"]
 
   - id: DR-FRM-002
     title: "禁止内部版次与非正式页眉信息"
+    status: active
     category: "formal-delivery"
     severity: high
     applies_to: ["技术方案", "标书", "合同技术附件", "正式报告"]
     file: "rules/formal-delivery/DR-FRM-002-禁止内部版次与非正式页眉信息.md"
+    dedup_signature: "正式交付文件暴露内部草稿迭代、非正式版次或内部文控状态"
+    authoring_guard: "页眉页脚和正文只使用正式文件名称、正式编号和正式发布版次，不生成V0.x、Draft、内部版等信息"
+    review_check: "检查所有页眉页脚、文件信息页和修订记录中的内部版本、草稿词和内部简称"
     detection_hints: ["V0.", "draft", "草稿", "内部版", "页眉内部简称", "内部修订记录"]
 
   - id: DR-FRM-003
     title: "禁止非正式项目简称"
+    status: active
     category: "formal-delivery"
     severity: high
     applies_to: ["技术方案", "标书", "合同", "项目建议书"]
     file: "rules/formal-delivery/DR-FRM-003-禁止非正式项目简称.md"
+    dedup_signature: "正式文件使用未定义的内部口语简称、数字代号或团队习惯称谓指代项目"
+    authoring_guard: "首次使用项目名称时采用正式全称；如需简称，先正式定义，后文只使用已定义称谓"
+    review_check: "比对封面正式项目名与正文称谓，检查未定义数字代号、内部昵称和缩写"
     detection_hints: ["口语简称", "数字代号", "内部代称", "未定义缩写"]
 
   - id: DR-FRM-004
     title: "禁止文档自述式元话语"
+    status: active
     category: "formal-delivery"
     severity: medium
     applies_to: ["技术方案", "标书", "正式报告", "实施方案"]
     file: "rules/formal-delivery/DR-FRM-004-禁止文档自述式元话语.md"
+    dedup_signature: "正文描述作者如何介绍文件，而不是直接陈述项目事实、方案或要求"
+    authoring_guard: "直接陈述项目、系统、方案、职责和实施内容，避免本方案用于、本文介绍、下面将等元话语"
+    review_check: "搜索文档自述式开头并判断是否可改为直接陈述事实"
     detection_hints: ["本方案用于", "本文介绍", "本文件旨在", "下面将", "本章节主要说明"]
 
   - id: DR-FRM-005
     title: "禁止内部素材来源与编制过程说明"
+    status: active
     category: "formal-delivery"
     severity: medium
     applies_to: ["技术方案", "标书", "正式报告"]
     file: "rules/formal-delivery/DR-FRM-005-禁止内部素材来源与编制过程说明.md"
+    dedup_signature: "正式图表或正文暴露素材如何获得、草图如何整理、内部资料如何拼接等制作过程"
+    authoring_guard: "图表只保留正式图名和必要技术注释；正式依据集中列入编制依据或参考文件，不描述内部制作过程"
+    review_check: "检查图注、表注和小字说明中的资料来源、素材、记忆整理、内部截图等编制痕迹"
     detection_hints: ["资料来源", "项目既有素材", "依据记忆整理", "内部资料", "素材截图", "编制说明"]
 
   - id: DR-FRM-006
     title: "对外表格使用规范数字序号"
+    status: active
     category: "formal-delivery"
     severity: medium
     applies_to: ["技术方案", "标书", "合同附件", "验收文件"]
     file: "rules/formal-delivery/DR-FRM-006-对外表格使用规范数字序号.md"
+    dedup_signature: "对外表格直接暴露供应商内部任务、问题单、工作包或追踪编码"
+    authoring_guard: "面向甲方的事项清单默认使用阿拉伯数字序号；内部追踪编码保留在内部台账，正式外部编号除外"
+    review_check: "检查表格首列和清单编号，区分内部自创编码与甲方/合同/标准正式编号"
     detection_hints: ["字母-数字内部编码", "Q-01", "TASK-", "ISSUE-", "内部工作包编号"]
 
   - id: DR-FRM-007
     title: "责任边界采用正向职责表达"
+    status: active
     category: "formal-delivery"
     severity: high
     applies_to: ["技术方案", "标书", "合同技术附件", "实施方案"]
     file: "rules/formal-delivery/DR-FRM-007-责任边界采用正向职责表达.md"
+    dedup_signature: "技术边界主要通过防御性否定、排除或免责措辞表达，而非通过职责分工和能力范围表达"
+    authoring_guard: "优先写清各方负责什么、系统实现什么和如何协同；必要排除项集中、准确表达，不在正文反复使用免责式措辞"
+    review_check: "检查不负责、不包含、不纳入、仅用于、不作为等表达是否可改为职责归属或阶段能力"
     detection_hints: ["不负责", "不包含", "不纳入", "仅用于", "仅作为", "不作为", "不能等同于"]
 
   - id: DR-FRM-008
     title: "统一使用正式项目主体称谓"
+    status: active
     category: "formal-delivery"
     severity: high
     applies_to: ["技术方案", "标书", "合同", "实施方案", "验收文件"]
     file: "rules/formal-delivery/DR-FRM-008-统一使用正式项目主体称谓.md"
+    dedup_signature: "正式项目文件以销售或内部沟通视角称呼文件接收方，或同一主体称谓混用"
+    authoring_guard: "在文档开头定义甲方、乙方、设备方、上位系统等主体，后文统一使用正式称谓，不使用客户、我司、你方等内部/销售语气"
+    review_check: "全文检查客户、我司、你方、贵司、用户方等称谓并核对同一主体是否统一"
     detection_hints: ["客户已明确", "如客户需要", "客户提供", "客户侧", "我司", "你方"]
