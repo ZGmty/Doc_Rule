@@ -1,0 +1,49 @@
+version: 1
+task_modes:
+  AUTHOR:
+    description: "编写、起草、改写或完善正式文档"
+    triggers: ["编写", "起草", "生成", "改写", "完善", "写一份", "形成技术方案", "形成标书", "形成合同"]
+    workflow: "workflows/author-document.md"
+    default_actions:
+      - "读取 catalog/rules.yaml"
+      - "按文档类型筛选 active 规则"
+      - "将 authoring_guard 转换为前置写作约束"
+      - "完稿后按 review_check 独立自检并直接修正"
+
+  REVIEW:
+    description: "检查、审查、比较或评估现有文档"
+    triggers: ["检查", "审查", "找问题", "评估", "比较版本", "是否正式", "规范性"]
+    workflow: "workflows/review-document.md"
+    default_actions:
+      - "读取 catalog/rules.yaml"
+      - "筛选适用规则并读取高相关规则全文"
+      - "给出证据、规则编号、问题说明和建议修改"
+
+  LEARN:
+    description: "从真实反馈中沉淀或扩展规则库"
+    triggers: ["记录", "沉淀", "加入仓库", "形成规则", "更新规则库", "以后不要再出现", "根据反例优化"]
+    workflow: "workflows/ingest-feedback.md"
+    default_actions:
+      - "提取候选问题"
+      - "去标识化"
+      - "读取 catalog/rules.yaml 做语义去重"
+      - "按 DUPLICATE / EXTENSION / NEW / CONFLICT 分类"
+      - "仅对 EXTENSION 或 NEW 修改仓库"
+
+  MAINTAIN:
+    description: "维护仓库结构、分类、规则生命周期或 Agent 可用性"
+    triggers: ["重构", "合并规则", "弃用规则", "优化仓库", "调整分类", "修改索引"]
+    workflow: "AGENTS.md"
+    default_actions:
+      - "保持规则 ID 稳定"
+      - "同步 catalog、schema、README 与 workflow"
+      - "避免直接删除已发布规则语义"
+
+fallback:
+  assumption: "若用户未明确说明，正式文档相关任务默认采用更严格的正式对外交付标准"
+  precedence:
+    - "明确用户指令"
+    - "甲方/招标/合同/法规强制要求"
+    - "AGENTS.md"
+    - "catalog/task-profiles.yaml"
+    - "具体规则文件"
