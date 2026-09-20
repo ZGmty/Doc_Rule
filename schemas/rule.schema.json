@@ -3,7 +3,18 @@
   "$id": "https://github.com/ZGmty/Doc_Rule/schemas/rule.schema.json",
   "title": "Doc_Rule rule catalog item",
   "type": "object",
-  "required": ["id", "title", "category", "severity", "applies_to", "file"],
+  "required": [
+    "id",
+    "title",
+    "status",
+    "category",
+    "severity",
+    "applies_to",
+    "file",
+    "dedup_signature",
+    "authoring_guard",
+    "review_check"
+  ],
   "properties": {
     "id": {
       "type": "string",
@@ -12,6 +23,10 @@
     "title": {
       "type": "string",
       "minLength": 2
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "deprecated", "superseded"]
     },
     "category": {
       "type": "string",
@@ -29,6 +44,18 @@
     "file": {
       "type": "string",
       "pattern": "^rules/.+\\.md$"
+    },
+    "dedup_signature": {
+      "type": "string",
+      "minLength": 8
+    },
+    "authoring_guard": {
+      "type": "string",
+      "minLength": 8
+    },
+    "review_check": {
+      "type": "string",
+      "minLength": 8
     },
     "detection_hints": {
       "type": "array",
