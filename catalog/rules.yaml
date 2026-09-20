@@ -1,0 +1,77 @@
+version: 1
+language: zh-CN
+repository_purpose: "技术文档、标书、合同正式交付反例规则库"
+
+defaults:
+  audience: "甲方、招标人、评审专家、合同相对方或最终使用部门"
+  assumption: "除非明确为内部稿，否则按正式对外交付文件处理"
+  workflow:
+    - "编写前加载适用规则"
+    - "编写过程中规避反例模式"
+    - "初稿完成后执行独立审查"
+    - "输出问题定位、规则编号、原因和建议改写"
+
+rules:
+  - id: DR-FRM-001
+    title: "禁止内部提示型版式残留"
+    category: "formal-delivery"
+    severity: high
+    applies_to: ["技术方案", "标书", "合同技术附件", "实施方案", "验收文件"]
+    file: "rules/formal-delivery/DR-FRM-001-禁止内部提示型版式残留.md"
+    detection_hints: ["高亮底色", "Callout", "提示框", "强调色块", "编辑备注样式", "修订痕迹"]
+
+  - id: DR-FRM-002
+    title: "禁止内部版次与非正式页眉信息"
+    category: "formal-delivery"
+    severity: high
+    applies_to: ["技术方案", "标书", "合同技术附件", "正式报告"]
+    file: "rules/formal-delivery/DR-FRM-002-禁止内部版次与非正式页眉信息.md"
+    detection_hints: ["V0.", "draft", "草稿", "内部版", "页眉内部简称", "内部修订记录"]
+
+  - id: DR-FRM-003
+    title: "禁止非正式项目简称"
+    category: "formal-delivery"
+    severity: high
+    applies_to: ["技术方案", "标书", "合同", "项目建议书"]
+    file: "rules/formal-delivery/DR-FRM-003-禁止非正式项目简称.md"
+    detection_hints: ["口语简称", "数字代号", "内部代称", "未定义缩写"]
+
+  - id: DR-FRM-004
+    title: "禁止文档自述式元话语"
+    category: "formal-delivery"
+    severity: medium
+    applies_to: ["技术方案", "标书", "正式报告", "实施方案"]
+    file: "rules/formal-delivery/DR-FRM-004-禁止文档自述式元话语.md"
+    detection_hints: ["本方案用于", "本文介绍", "本文件旨在", "下面将", "本章节主要说明"]
+
+  - id: DR-FRM-005
+    title: "禁止内部素材来源与编制过程说明"
+    category: "formal-delivery"
+    severity: medium
+    applies_to: ["技术方案", "标书", "正式报告"]
+    file: "rules/formal-delivery/DR-FRM-005-禁止内部素材来源与编制过程说明.md"
+    detection_hints: ["资料来源", "项目既有素材", "依据记忆整理", "内部资料", "素材截图", "编制说明"]
+
+  - id: DR-FRM-006
+    title: "对外表格使用规范数字序号"
+    category: "formal-delivery"
+    severity: medium
+    applies_to: ["技术方案", "标书", "合同附件", "验收文件"]
+    file: "rules/formal-delivery/DR-FRM-006-对外表格使用规范数字序号.md"
+    detection_hints: ["字母-数字内部编码", "Q-01", "TASK-", "ISSUE-", "内部工作包编号"]
+
+  - id: DR-FRM-007
+    title: "责任边界采用正向职责表达"
+    category: "formal-delivery"
+    severity: high
+    applies_to: ["技术方案", "标书", "合同技术附件", "实施方案"]
+    file: "rules/formal-delivery/DR-FRM-007-责任边界采用正向职责表达.md"
+    detection_hints: ["不负责", "不包含", "不纳入", "仅用于", "仅作为", "不作为", "不能等同于"]
+
+  - id: DR-FRM-008
+    title: "统一使用正式项目主体称谓"
+    category: "formal-delivery"
+    severity: high
+    applies_to: ["技术方案", "标书", "合同", "实施方案", "验收文件"]
+    file: "rules/formal-delivery/DR-FRM-008-统一使用正式项目主体称谓.md"
+    detection_hints: ["客户已明确", "如客户需要", "客户提供", "客户侧", "我司", "你方"]
