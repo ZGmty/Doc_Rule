@@ -16,15 +16,18 @@
 
 ```text
 .
-├── README.md                    # 项目说明
+├── README.md
 ├── AGENTS.md                    # AI/Agent 使用本仓库时的工作约定
 ├── catalog/
 │   └── rules.yaml               # 机器可读规则索引
+├── schemas/
+│   └── rule.schema.json         # 规则索引数据结构约束
 ├── prompts/
 │   └── formal-document-review.md# 可直接用于 AI 审查的提示模板
 └── rules/
     ├── README.md                # 规则编写规范
-    └── formal-delivery/         # 面向甲方正式交付文件的成文规范
+    ├── _template.md             # 新增规则模板
+    └── formal-delivery/
         ├── DR-FRM-001-禁止内部提示型版式残留.md
         ├── DR-FRM-002-禁止内部版次与非正式页眉信息.md
         ├── DR-FRM-003-禁止非正式项目简称.md
@@ -54,6 +57,26 @@ AI 应先读取 `catalog/rules.yaml`，筛选适用于当前文档类型的规�
 - 检查职责边界是否可以改写为“谁负责什么、系统实现什么、如何协同”。
 
 可直接使用 `prompts/formal-document-review.md` 作为审查提示。
+
+## 面向程序的接入方式
+
+建议程序先读取 `catalog/rules.yaml`，按 `applies_to`、`severity` 和 `category` 过滤规则，再按 `file` 字段加载具体 Markdown 规则。索引字段结构可用 `schemas/rule.schema.json` 校验。
+
+推荐流程：
+
+```text
+文档类型识别
+   ↓
+读取 catalog/rules.yaml
+   ↓
+筛选适用规则
+   ↓
+加载规则 Markdown
+   ↓
+起草 / 审查
+   ↓
+按规则 ID 输出问题、证据与改写建议
+```
 
 ## 规则编号
 
