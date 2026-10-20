@@ -25,7 +25,12 @@
 - 有至少 2 个推荐表达或处理方式；
 - 有检查方法；
 - 有必要例外；
+- 有应保留的表达，反例与推荐表达共享完整输入依据；
 - 在 `catalog/rules.yaml` 中登记。
+
+适用范围扩展时同步 `catalog/document-profiles.yaml`。上游参考配置在 `catalog/upstream-sources.yaml`，维护时按 `workflows/refresh-upstream-sources.md` 检查更新、去重和记录采用依据。
+
+参考上游的规则须链接至已阅读的具体文件版本，在索引登记 `source_refs`。优先独立表述并使用去标识化的自编示例；复制原文或代码时核对授权并保留相应声明。
 
 ## 规则质量标准
 
