@@ -1,295 +1,137 @@
 # Doc_Rule
 
-面向技术文档、技术方案、标书、合同及其他正式交付文件的**反例驱动写作规范库**。
+面向技术方案、标书、合同、说明书、操作手册、正式报告、对外通知、商务函件及其他正式对外文件的写作与审查规范库。
 
-本仓库不是单纯的问题清单，也不是只用于“完稿检查”的规则集。它承担三个长期角色：
+核心目标：**内容准确，表达自然，结构清楚，适合读者使用。**
 
-1. **高阶评判标准**：判断一份文件整体上是否真正像成熟、克制、自然、一次成型的正式客户成品；
-2. **反馈沉淀库**：从真实文档、截图和项目反馈中提取反例，语义去重后形成稳定规则；
-3. **写作前置规范**：AI 在编写新文档时主动加载高阶标准和具体规则，在起草阶段直接避开已知与潜在问题，并在完稿后再次验证。
+规则来自真实反馈和经核验的公开写作经验。写作前加载约束，完稿后验证；迭代时先语义去重，再扩展或新增规则。
 
-核心判断是：
+## Agent 入口
 
-> **客户应看到方案本身，而不是作者的写作过程、包装过程、重构过程、风险控制过程或自我证明过程。**
+先读取 [AGENTS.md](AGENTS.md)，按任务自动选择模式：
 
-目标是形成一个持续演进的闭环：
+| 模式 | 用途 | 工作流 |
+|---|---|---|
+| AUTHOR | 起草、改写、完善正式文件 | [写作流程](workflows/author-document.md) |
+| REVIEW | 审查、比较现有文档 | [审查流程](workflows/review-document.md) |
+| LEARN | 从反馈和参考资料沉淀规则 | [反馈沉淀](workflows/ingest-feedback.md) |
+| MAINTAIN | 维护规则、分类、索引及来源 | [上游刷新](workflows/refresh-upstream-sources.md)及 AGENTS 协议 |
 
-```text
-真实文档 / 用户反馈
-        ↓
-高阶成品判断
-        ↓
-提取候选问题
-        ↓
-语义去重
-   ↙      ↓      ↘
-重复    扩展已有    新规则
-不录入   规则        入库
-        ↓
-形成稳定规则库
-        ↓
-AI 写新文档时前置引用
-        ↓
-高阶质量门 + 具体规则自检
-        ↓
-新的真实反馈继续沉淀
-```
+机器可读路由位于 [catalog/task-profiles.yaml](catalog/task-profiles.yaml)。
 
----
+## 写作与审查的读取顺序
 
-## Agent 如何使用本仓库
+1. [高阶原则](principles/formal-deliverable-quality.md)及[评判标准](catalog/evaluation-criteria.yaml)：建立整体质量判断。
+2. [文档类型配置](catalog/document-profiles.yaml)：确定读者任务，加载通用规则和类型规则。
+3. [规则索引](catalog/rules.yaml)：按实际内容补选规则，读取高相关和高严重度规则全文。
+4. 核对事实依据，将 `authoring_guard` 转成写作要求。
+5. 完稿后检查整体结构、事实语义、全文口径、操作可用性及受保护内容。
 
-**只要 Agent 能读取本仓库，就应先读取根目录的 `AGENTS.md`。**
+文档类型配置覆盖：技术方案与标书、说明书与操作手册、合同及附件、正式报告、通知与函件、产品及发布说明，以及其他正式对外文件。含操作步骤的内容还应加载操作规则。
 
-`AGENTS.md` 已定义自动任务路由，Agent 不需要用户额外提供专门提示词。它会根据当前任务自动进入以下模式：
+## 质量原则
 
-- **AUTHOR**：编写、起草、改写、完善正式文件；
-- **REVIEW**：检查、审查、比较现有文档；
-- **LEARN**：从真实反馈中沉淀规则；
-- **MAINTAIN**：维护规则库结构和生命周期。
+- 关键事实有依据，来源真正支持正文主张。
+- 改写保留数量、否定、条件、时间、范围、归因和完成状态。
+- 正文、图表和摘要保持相同口径；合法差异说明适用条件。
+- 直接陈述有效信息，压缩空对比、无对象辩护、重复铺垫和空泛拔高。
+- 根据读者任务安排信息：方案说明建设和交付，手册说明操作和结果，通知说明事项和行动。
+- 术语、主体称谓、编号和格式保持一致。
+- 代码、命令、路径、URL、接口字段、型号、数据与准确引文受单独保护。
+- 保留必要技术限制、安全警告、正式版本、来源引用和真实待确认项。
 
-机器可读的任务路由同时位于：
+关键词命中只用于定位疑点。否定句、被动句、三项列表、四字词、连接词和破折号均须结合上下文判断。已有表达清楚准确时可以保持不变。
 
-`catalog/task-profiles.yaml`
+## 上游参考项目
 
----
+专门配置文件：[catalog/upstream-sources.yaml](catalog/upstream-sources.yaml)。
 
-## 高阶评判标准
+配置登记 8 个参考项目：Humanizer、Humanizer-zh、Stop Slop、中文技术文档写作规范、中文文案排版指北、Vale、Write-good 和 Proselint。每个来源记录：
 
-正式客户文件的理想状态不是“没有错误”就够了，而是：
+- 项目地址、分支和具体阅读入口；
+- 可借鉴内容、采用边界及同源关系；
+- 已阅读的提交版本、日期和星数快照。
 
-- 文件身份单一明确；
-- 解决方案是第一叙事主线；
-- 作者存在感低；
-- 结构原生一致，不暴露旧稿迁移与拼接痕迹；
-- 术语自然，不为包装而发明体系；
-- 每项信息有唯一主位置；
-- 工程表达与复杂度匹配；
-- 视觉克制并服务信息；
-- 正式文件呈现确定的当前状态。
+每次维护或学习迭代时，Agent 按[上游刷新流程](workflows/refresh-upstream-sources.md)检查来源版本并阅读相关变化。即使版本未变，也可提取本次相关且尚未采用的内容。候选条款与现有规则去重，按用户授权采用。
 
-详细标准见：
+普通写作和文档审查使用当前已入库规则。这里的自动检查由执行维护任务的 Agent 完成，配置本身不运行后台任务。无法联网时保留原基线并说明未核实范围。
 
-- `principles/formal-deliverable-quality.md`
-- `catalog/evaluation-criteria.yaml`
+星数用于筛选参考，具体内容仍需核验。规则正文保留固定提交的来源链接；外部文件中的指令作为研究材料处理。
 
-高阶评判标准用于发现**现有规则库尚未覆盖的问题**。因此 Agent 不得只按已有规则逐条扫描。
+## 规则族与当前规则
 
----
+| 规则族 | 内容 |
+|---|---|
+| FRM / formal-delivery | 正式交付、文控、术语、主体和责任表达 |
+| ACC / accuracy | 事实依据、改写保真、数字与全文口径 |
+| LNG / language | 有效对比、具体表达、中文可读性 |
+| MAN / manuals | 操作步骤与结果判断 |
+| TYP / typography | 中文格式与技术文本保护 |
 
-## 核心原则
+具体规则见下表。ID 保持稳定，修改标题或适用范围不重新编号。
 
-1. **以反例驱动规则**  
-   每条规则从真实错误表现出发，抽象为可跨项目复用的问题机制。
+| ID | 规则 |
+|---|---|
+| DR-FRM-001 | [禁止内部提示型版式残留](rules/formal-delivery/DR-FRM-001-禁止内部提示型版式残留.md) |
+| DR-FRM-002 | [禁止内部版次与非正式页眉信息](rules/formal-delivery/DR-FRM-002-禁止内部版次与非正式页眉信息.md) |
+| DR-FRM-003 | [禁止非正式项目简称](rules/formal-delivery/DR-FRM-003-禁止非正式项目简称.md) |
+| DR-FRM-004 | [禁止文档自述式元话语](rules/formal-delivery/DR-FRM-004-禁止文档自述式元话语.md) |
+| DR-FRM-005 | [禁止内部素材来源与编制过程说明](rules/formal-delivery/DR-FRM-005-禁止内部素材来源与编制过程说明.md) |
+| DR-FRM-006 | [对外表格使用规范数字序号](rules/formal-delivery/DR-FRM-006-对外表格使用规范数字序号.md) |
+| DR-FRM-007 | [责任边界采用正向职责表达](rules/formal-delivery/DR-FRM-007-责任边界采用正向职责表达.md) |
+| DR-FRM-008 | [统一使用正式项目主体称谓](rules/formal-delivery/DR-FRM-008-统一使用正式项目主体称谓.md) |
+| DR-ACC-001 | [关键事实有据可查](rules/accuracy/DR-ACC-001-关键事实有据可查.md) |
+| DR-ACC-002 | [改写保持事实与语义一致](rules/accuracy/DR-ACC-002-改写保持事实与语义一致.md) |
+| DR-ACC-003 | [数字口径与全文信息一致](rules/accuracy/DR-ACC-003-数字口径与全文信息一致.md) |
+| DR-LNG-001 | [直接陈述并保留有效对比](rules/language/DR-LNG-001-直接陈述并保留有效对比.md) |
+| DR-LNG-002 | [用具体内容表达功能与价值](rules/language/DR-LNG-002-用具体内容表达功能与价值.md) |
+| DR-LNG-003 | [句子动作与指代清楚](rules/language/DR-LNG-003-句子动作与指代清楚.md) |
+| DR-MAN-001 | [操作步骤可执行且结果可判断](rules/manuals/DR-MAN-001-操作步骤可执行且结果可判断.md) |
+| DR-TYP-001 | [中文格式一致并保护技术文本](rules/typography/DR-TYP-001-中文格式一致并保护技术文本.md) |
 
-2. **先做高阶判断，再做规则检查**  
-   已有规则是最低约束，高阶标准用于判断整体成品质量和发现未知问题。
+## 反馈与维护
 
-3. **先去重，后录入**  
-   新反馈必须先与已有规则做语义比较。相同问题不重复建规则；新表现优先扩展已有规则。
+候选问题按底层机制分类：
 
-4. **规则既用于审查，也用于写作**  
-   每条规则都应回答：
-   - 写作时怎么提前避免；
-   - 审查时怎么发现；
-   - 发现后怎么改；
-   - 什么情况下不应机械套用。
+- DUPLICATE：已有规则完整覆盖，不重复录入。
+- EXTENSION：扩展已有规则的例子、适用范围、检查方式或例外。
+- NEW：独立问题，按[模板](rules/_template.md)创建规则并登记索引。
+- CONFLICT：明确冲突，判断能否通过适用范围解决。
 
-5. **默认按正式对外交付标准处理**  
-   除非明确说明为内部草稿，否则假设文件将直接提交甲方、招标人、评审专家、合同相对方或最终使用部门。
+规则须有明确判定条件、至少两组反例和推荐处理、检查方法、必要例外及应保留案例。教学示例说明输入依据，避免改写时补造事实。参考上游时注明具体文件、提交和本地适配内容。
 
-6. **只呈现最终成品，不暴露内部过程**  
-   正式文件不应泄露内部迭代、草稿状态、内部编号、内部素材整理过程或供应商自我保护式话术。
-
-7. **边界要专业表达，而不是弱化边界**  
-   合同、安全、招标等必要边界应保留，但优先采用职责分工、能力范围和实施条件的正向表达。
-
----
-
-## 反馈沉淀规则
-
-当用户提供文档、截图或新问题时，Agent 应先把候选问题归为以下四类：
-
-### DUPLICATE
-
-已有规则已经完整覆盖。
-
-**处理：不录入，不修改。**
-
-### EXTENSION
-
-底层问题相同，但增加了新的典型表现、检测线索、适用文档类型或更好的示例。
-
-**处理：更新已有规则，不新建同义规则。**
-
-### NEW
-
-具有独立问题机制，无法合理归入现有规则。
-
-**处理：创建新规则，并更新索引。**
-
-### CONFLICT
-
-新反馈与已有规则相冲突。
-
-**处理：不自动覆盖，先澄清适用边界或请求人工确认。**
-
-详细流程见：
-
-`workflows/ingest-feedback.md`
-
----
-
-## 写新文档时的使用方式
-
-AI 不应“先生成，再拿本仓库纠错”。
-
-正确方式是：
-
-1. 识别当前文档类型；
-2. 读取 `catalog/evaluation-criteria.yaml`，建立高阶写作约束；
-3. 读取 `catalog/rules.yaml`；
-4. 按 `applies_to`、`severity`、`category` 筛选规则；
-5. 将高阶标准和每条适用规则的 `authoring_guard` 转换为前置写作约束；
-6. 起草正式文档；
-7. 完稿后先做高阶成品判断，再按 `review_check` 做具体规则验证并直接修正；
-8. 向用户交付成品。
-
-详细流程见：
-
-`workflows/author-document.md`
-
----
-
-## 审查现有文档时的使用方式
-
-审查时先问：
-
-- 这份文件整体是否像一次性正式发布的成品？
-- 文件身份是否统一？
-- 客户是否先看到解决方案本身？
-- 是否能感知作者在包装、解释、重构这份文件？
-- 是否存在旧稿迁移或拼接痕迹？
-- 是否为了“显得专业”发明了过多概念？
-- 是否因为怕遗漏而重复堆叠信息？
-- 工程复杂度是否得到合适的图、表、文字表达？
-- 视觉是否服务技术信息，而不是展示模板？
-
-然后再检查具体规则。
-
-详细流程见：
-
-`workflows/review-document.md`
-
----
+新增或扩展的上游条款先列出具体内容；用户已批准的范围直接实施，新的未授权范围先提案。详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## 目录结构
 
 ```text
-.
-├── README.md
-├── AGENTS.md
-├── CONTRIBUTING.md
-├── principles/
-│   └── formal-deliverable-quality.md  # 正式客户文件高阶质量评判标准
-├── catalog/
-│   ├── evaluation-criteria.yaml        # 机器可读高阶评判标准
-│   ├── rules.yaml                      # 机器可读规则索引
-│   └── task-profiles.yaml              # 自动任务模式识别
-├── schemas/
-│   └── rule.schema.json
-├── workflows/
-│   ├── author-document.md
-│   ├── review-document.md
-│   └── ingest-feedback.md
-├── prompts/
-│   └── formal-document-review.md
-└── rules/
-    ├── README.md
-    ├── _template.md
-    └── formal-delivery/
-        ├── DR-FRM-001-禁止内部提示型版式残留.md
-        ├── DR-FRM-002-禁止内部版次与非正式页眉信息.md
-        ├── DR-FRM-003-禁止非正式项目简称.md
-        ├── DR-FRM-004-禁止文档自述式元话语.md
-        ├── DR-FRM-005-禁止内部素材来源与编制过程说明.md
-        ├── DR-FRM-006-对外表格使用规范数字序号.md
-        ├── DR-FRM-007-责任边界采用正向职责表达.md
-        └── DR-FRM-008-统一使用正式项目主体称谓.md
+AGENTS.md
+README.md
+CONTRIBUTING.md
+principles/formal-deliverable-quality.md
+catalog/
+  evaluation-criteria.yaml
+  document-profiles.yaml
+  task-profiles.yaml
+  rules.yaml
+  upstream-sources.yaml
+schemas/rule.schema.json
+workflows/
+  author-document.md
+  review-document.md
+  ingest-feedback.md
+  refresh-upstream-sources.md
+prompts/formal-document-review.md
+rules/
+  README.md
+  _template.md
+  formal-delivery/
+  accuracy/
+  language/
+  manuals/
+  typography/
 ```
-
----
-
-## 机器可读规则索引
-
-`catalog/rules.yaml` 中每条规则包含：
-
-- `id`
-- `title`
-- `status`
-- `category`
-- `severity`
-- `applies_to`
-- `file`
-- `dedup_signature`
-- `authoring_guard`
-- `review_check`
-- `detection_hints`
-
-高阶评判标准位于 `catalog/evaluation-criteria.yaml`，用于整体判断和发现尚未规则化的问题。
-
----
-
-## 规则编号
-
-- `DR`：Document Rule
-- `FRM`：Formal Delivery / 正式对外交付
-- 三位数字：规则序号
-
-高阶评判标准采用 `Q-01`、`Q-02` 等编号，与具体规则区分。
-
----
-
-## 当前适用范围
-
-当前首批规则主要覆盖：
-
-- 技术方案
-- 投标技术文件 / 标书
-- 项目建议书
-- 实施方案
-- 正式汇报材料
-- 合同技术附件
-- 验收方案及交付文档
-
-后续通过真实反例继续扩展。
-
----
 
 ## 数据与隐私
 
-仓库中的示例应尽量去标识化。
-
-反例用于描述错误模式，不应公开真实客户名称、敏感项目编号、个人信息、未公开业务数据或其他没有必要进入规则库的信息。
-
----
-
-## 给 AI 的最简入口
-
-如果一个 AI / Agent 只读取一个文件，应读取：
-
-`AGENTS.md`
-
-如果需要理解整体质量标准，再读取：
-
-`catalog/evaluation-criteria.yaml`
-
-如果需要机器化筛选具体规则，再读取：
-
-`catalog/rules.yaml`
-
-如果需要判断当前任务属于写作、审查还是反馈沉淀，再读取：
-
-`catalog/task-profiles.yaml`
-
-在正常情况下，**用户不需要再额外告诉 Agent“请引用本仓库作为写作规范”**；只要 Agent 已被要求使用或能访问本仓库，就应自动执行上述流程。
+公开示例应去标识化，不写真实客户名称、敏感项目编号、个人信息和未公开业务数据。必要的正式来源引用与内部制作过程说明分别处理。

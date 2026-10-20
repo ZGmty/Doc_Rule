@@ -1,0 +1,146 @@
+version: 1
+purpose: 先确定文档读者和任务，再选择规则；内容相关规则跨类型适用
+common_rules:
+- DR-ACC-001
+- DR-ACC-002
+- DR-ACC-003
+- DR-LNG-001
+- DR-LNG-002
+- DR-LNG-003
+- DR-TYP-001
+selection:
+- 先选主要文档类型，加载 common_rules 和该类型 additional_rules
+- 再按实际内容补选规则；含操作步骤时增加 DR-MAN-001，涉及职责时增加 DR-FRM-007
+- 多用途文件保持一个主要身份，可按章节加载补充规则
+- 未匹配的正式文件使用 general_external，并根据具体内容补选规则
+- 优先级：明确用户指令、适用正式要求、事实与语义准确、文体和读者任务、风格偏好
+profiles:
+- id: technical_proposal
+  document_types:
+  - 技术方案
+  - 标书
+  - 项目建议书
+  - 实施方案
+  - 验收方案
+  - 验收文件
+  reader_task: 理解方案、实施条件、验证方法与交付内容
+  additional_rules:
+  - DR-FRM-001
+  - DR-FRM-002
+  - DR-FRM-003
+  - DR-FRM-004
+  - DR-FRM-005
+  - DR-FRM-006
+  - DR-FRM-007
+  - DR-FRM-008
+  preserve:
+  - 正式响应条款与编号
+  - 责任边界
+  - 真实待确认输入
+- id: manual
+  document_types:
+  - 说明书
+  - 操作手册
+  - 安装指南
+  - 维护指南
+  - 故障排查
+  reader_task: 在适用条件下完成操作并判断结果
+  additional_rules:
+  - DR-FRM-001
+  - DR-FRM-002
+  - DR-FRM-003
+  - DR-FRM-004
+  - DR-FRM-005
+  - DR-FRM-008
+  - DR-MAN-001
+  preserve:
+  - 安全警告和操作提示
+  - 适用版本与修订记录
+  - 必要阅读指引
+  - 真实错误信息
+- id: contract
+  document_types:
+  - 合同
+  - 合同及附件
+  - 合同技术附件
+  - 合同附件
+  reader_task: 明确约定、履行条件、责任与验收依据
+  additional_rules:
+  - DR-FRM-001
+  - DR-FRM-002
+  - DR-FRM-003
+  - DR-FRM-004
+  - DR-FRM-005
+  - DR-FRM-006
+  - DR-FRM-007
+  - DR-FRM-008
+  preserve:
+  - 约定原义
+  - 正式编号
+  - 必要禁止及排除条款
+  - 适用版本和引用
+- id: report
+  document_types:
+  - 正式报告
+  - 正式汇报材料
+  - 研究报告
+  reader_task: 理解结果、证据、方法和结论适用范围
+  additional_rules:
+  - DR-FRM-001
+  - DR-FRM-002
+  - DR-FRM-003
+  - DR-FRM-004
+  - DR-FRM-005
+  - DR-FRM-008
+  preserve:
+  - 方法及资料来源
+  - 不确定性与局限
+  - 有实质内容的总结
+- id: external_notice
+  document_types:
+  - 对外通知
+  - 商务函件
+  reader_task: 了解事项、对象、生效时间和需要采取的行动
+  additional_rules:
+  - DR-FRM-001
+  - DR-FRM-002
+  - DR-FRM-003
+  - DR-FRM-004
+  - DR-FRM-008
+  preserve:
+  - 必要称呼与礼貌用语
+  - 明确时间与联系方式
+  - 正式文件用途
+- id: product_information
+  document_types:
+  - 产品说明
+  - 发布说明
+  - 迁移指南
+  reader_task: 理解产品能力、适用条件及版本变化
+  additional_rules:
+  - DR-FRM-001
+  - DR-FRM-002
+  - DR-FRM-003
+  - DR-FRM-004
+  - DR-FRM-005
+  - DR-FRM-008
+  preserve:
+  - 真实版本差异
+  - 迁移步骤
+  - 兼容性限制
+  - 功能完成状态
+- id: general_external
+  document_types:
+  - 其他正式对外文件
+  reader_task: 获得准确、清楚且适合接收方的信息
+  additional_rules:
+  - DR-FRM-001
+  - DR-FRM-002
+  - DR-FRM-003
+  - DR-FRM-004
+  - DR-FRM-005
+  - DR-FRM-008
+  preserve:
+  - 适用的正式格式
+  - 必要限定与引用
+  - 明确的读者指引

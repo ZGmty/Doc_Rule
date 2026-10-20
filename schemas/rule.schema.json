@@ -26,7 +26,11 @@
     },
     "status": {
       "type": "string",
-      "enum": ["active", "deprecated", "superseded"]
+      "enum": [
+        "active",
+        "deprecated",
+        "superseded"
+      ]
     },
     "category": {
       "type": "string",
@@ -34,12 +38,18 @@
     },
     "severity": {
       "type": "string",
-      "enum": ["high", "medium", "low"]
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
     },
     "applies_to": {
       "type": "array",
       "minItems": 1,
-      "items": {"type": "string"}
+      "items": {
+        "type": "string"
+      }
     },
     "file": {
       "type": "string",
@@ -59,7 +69,18 @@
     },
     "detection_hints": {
       "type": "array",
-      "items": {"type": "string"}
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_refs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]+$"
+      },
+      "description": "参考来源 ID，须存在于 catalog/upstream-sources.yaml；具体文件和提交链接保存在规则正文。"
     }
   },
   "additionalProperties": true
